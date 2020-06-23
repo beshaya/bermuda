@@ -1,4 +1,4 @@
-Frontend for Burmuda by Shannon T
+Frontend for Bermuda by Shannon T
 
 # Getting started for development
 * Install node v12
