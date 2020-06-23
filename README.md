@@ -1,2 +1,2 @@
 # bermuda
-Frontend for Burmuda by Shannon
+Frontend for Bermuda by Shannon
