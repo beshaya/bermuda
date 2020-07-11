@@ -19,31 +19,30 @@ export const firestore = firebase.firestore();
 export var user: firebase.User | null = null;
 
 auth.onAuthStateChanged(userAuth => {
-    user = userAuth;
-    console.log(user);
+  user = userAuth;
+  console.log(user);
 });
 
 const provider = new firebase.auth.GoogleAuthProvider();
 
 export const SignInWithGoogle = () => {
-    auth.signInWithPopup(provider);
+  auth.signInWithPopup(provider);
 };
 
 export const SignOut = () => {
-    auth.signOut();
+  auth.signOut();
 }
 
 export function Login() {
-    console.log(user);
-    if (user) {
-        return <Redirect to='/' />
-    }
-    return (
-        <header className="App-header">
-        <h1>Bermuda</h1>
-        <button onClick={SignInWithGoogle}> Login </button>
-        </header>
-    )
+  if (user) {
+    return <Redirect to='/' />
+  }
+  return (
+    <header className="App-header">
+    <h1>Bermuda</h1>
+      <button onClick={SignInWithGoogle}> Login </button>
+    </header>
+  )
 }
 
 export default Login;

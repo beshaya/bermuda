@@ -5,19 +5,18 @@ import {SignOut } from './firebase';
 import { UserContext } from "./providers/userProvider";
 
 function App() {
-    const user = useContext(UserContext);
-    if (!user) {
-      return <Redirect to='/login' />
-    }
-    console.log(user);
-    return (
-      <div className="App">
-        <button onClick={SignOut}> Log Out </button>
-        <header className="App-header">
-          <h1>Bermuda</h1>
-          Welcome {user.displayName}
-        </header>
-     </div>
+  const user = useContext(UserContext);
+  if (!user) {
+    return <Redirect to='/login' />
+  }
+  return (
+    <div className="App">
+      <button onClick={SignOut}> Log Out </button>
+      <header className="App-header">
+        <h1>Bermuda</h1>
+        Welcome {user.displayName}
+      </header>
+    </div>
   );
 }
 
