@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import { Redirect } from 'react-router-dom'
 import './App.css';
-import Map from './Map';
+import Map from './components/Map';
 import {SignOut } from './firebase';
 import { UserContext } from "./providers/userProvider";
 

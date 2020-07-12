@@ -5,24 +5,23 @@ import '../styles/Map.css';
 export const Map:React.FunctionComponent<{}> = () => {
   const [rows] = React.useState(9);
   const [columns] = React.useState(9);
-  const [tiles] = React.useState(9);
+
+  function renderTiles() {
+    let map = []
+
+    for (let r = 0; r < rows; r++) {
+      let tiles = []
+      for (let c = 0; c < columns; c++) {
+        tiles.push(<Tile />)
+      }
+      map.push(<tr>{tiles}</tr>)
+    }
+    return <tbody>{map}</tbody>;
+  }
 
     return (
       <table className="Map">
-        <tbody>
-          rows = {rows}<br />
-          columns = {columns}<br />
-          tiles = {tiles}<br />
-          <tr><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /></tr>
-          <tr><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /></tr>
-          <tr><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /></tr>
-          <tr><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /></tr>
-          <tr><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /></tr>
-          <tr><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /></tr>
-          <tr><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /></tr>
-          <tr><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /></tr>
-          <tr><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /><Tile /></tr>
-        </tbody>
+        {renderTiles()}
       </table>
     );
   }

@@ -6,7 +6,7 @@ export const Tile:React.FunctionComponent<{ initial?: string }> = ({ initial = "
 
     return (
         <td className="Tile">
-        {notes}
+            {notes}
         </td>
     );
   }
