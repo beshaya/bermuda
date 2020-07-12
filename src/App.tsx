@@ -17,9 +17,7 @@ function App() {
         <h1>Bermuda</h1>
         Welcome {user.displayName}
       </header>
-      <body>
-        <Map />
-      </body>
+      <Map />
     </div>
   );
 }

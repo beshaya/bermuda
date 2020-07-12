@@ -11,5 +11,4 @@ export const Tile:React.FunctionComponent<{ initial?: string }> = ({ initial = "
     );
   }
   
-  export default Tile;
-  
+export default Tile;

@@ -27,3 +27,4 @@ export const Map:React.FunctionComponent<{}> = () => {
   }
   
   export default Map;
+  
