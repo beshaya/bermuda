@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
 import { Redirect } from 'react-router-dom'
 import './App.css';
+import Map from './components/Map';
 import {SignOut } from './firebase';
 import { UserContext } from "./providers/userProvider";
 
@@ -16,6 +17,7 @@ function App() {
         <h1>Bermuda</h1>
         Welcome {user.displayName}
       </header>
+      <Map />
     </div>
   );
 }
