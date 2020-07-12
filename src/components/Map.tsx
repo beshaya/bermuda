@@ -12,9 +12,9 @@ export const Map:React.FunctionComponent<{}> = () => {
     for (let r = 0; r < rows; r++) {
       let tiles = []
       for (let c = 0; c < columns; c++) {
-        tiles.push(<Tile />)
+        tiles.push(<Tile key={r+','+c} />)
       }
-      map.push(<tr>{tiles}</tr>)
+      map.push(<tr key={r}>{tiles}</tr>)
     }
     return <tbody>{map}</tbody>;
   }
@@ -27,4 +27,3 @@ export const Map:React.FunctionComponent<{}> = () => {
   }
   
   export default Map;
-  
