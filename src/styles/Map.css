@@ -1,12 +1,19 @@
-.Map {
+.map {
   border-spacing: 0;
+  background-color: cyan;
+  width: 1000px;
+  padding: 50px;
 }
 
-.Tile {
+.tile {
   width: 100px;
   height: 100px;
   padding: 0px;
   background-image: url("../assets/ocean/calm.jpg");
   background-color: navy;
   background-size: 100px 100px;
+}
+
+.tile:hover {
+  opacity: 50%;
 }
