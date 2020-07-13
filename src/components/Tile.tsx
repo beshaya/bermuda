@@ -5,7 +5,7 @@ export const Tile:React.FunctionComponent<{ initial?: string }> = ({ initial = "
   const [notes] = React.useState(initial);
 
     return (
-        <td className="Tile">
+        <td className="tile">
             {notes}
         </td>
     );

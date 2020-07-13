@@ -11,13 +11,15 @@ function App() {
     return <Redirect to='/login' />
   }
   return (
-    <div className="App">
-      <button onClick={SignOut}> Log Out </button>
-      <header className="App-header">
+    <div className="app">
+      <header className="header">
         <h1>Bermuda</h1>
-        Welcome {user.displayName}
+        <div className="user-info">Welcome {user.displayName}</div>
+        <button onClick={SignOut}> Log Out </button>
       </header>
-      <Map />
+      <div className="content">
+        <Map />
+      </div>
     </div>
   );
 }
