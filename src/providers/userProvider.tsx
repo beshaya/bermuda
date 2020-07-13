@@ -1,15 +1,28 @@
 import React, { Component, createContext } from "react";
-import { auth } from "../firebase";
+import { auth, GetShipAndGameForUser, ShipAndGame } from "../firebase";
 
-export const UserContext = createContext<null | firebase.User>(null);
-class UserProvider extends Component<{}, {user: null | firebase.User}> {
+interface UserData {
+  user: firebase.User;
+  game_id: string;
+  ship_id: string;
+  ship_name: string;
+}
+
+export const UserContext = createContext<null | UserData>(null);
+class UserProvider extends Component<{}, {user: null | UserData}> {
   state = {
     user: null
   };
 
   componentDidMount = () => {
-    auth.onAuthStateChanged(userAuth => {
-      this.setState({ user: userAuth});
+    auth.onAuthStateChanged(async (userAuth) => {
+      if (!userAuth) {
+        this.setState({ user: null });
+        return;
+      }
+      const ship_and_game = await GetShipAndGameForUser(userAuth);
+      const user_data = {user: userAuth, ...ship_and_game}
+      this.setState({ user: user_data });
     });
   };
   render() {
