@@ -20,7 +20,7 @@ export const Map:React.FunctionComponent<{}> = () => {
   }
 
     return (
-      <table className="Map">
+      <table className="map">
         {renderTiles()}
       </table>
     );
