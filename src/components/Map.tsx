@@ -1,20 +1,18 @@
 import * as React from 'react';
 import Tile from './Tile';
+import { MapRepr, TileDict } from '../firebase';
 import '../styles/Map.css';
   
-export const Map:React.FunctionComponent<{}> = () => {
-  const [rows] = React.useState(9);
-  const [columns] = React.useState(9);
-
+export function Map(props: {map: MapRepr, tiles: TileDict}) {
   function renderTiles() {
-    let map = []
+    const map = [];
 
-    for (let r = 0; r < rows; r++) {
-      let tiles = []
-      for (let c = 0; c < columns; c++) {
-        tiles.push(<Tile key={r+','+c} />)
+    for (let r = 0; r < props.map.length; r++) {
+      const tiles = [];
+      for (let c = 0; c < props.map[r].length; c++) {
+        tiles.push(<Tile key={r+','+c} tileInfo={props.tiles[props.map[r][c]]} />);
       }
-      map.push(<tr key={r}>{tiles}</tr>)
+      map.push(<tr key={r}>{tiles}</tr>);
     }
     return <tbody>{map}</tbody>;
   }

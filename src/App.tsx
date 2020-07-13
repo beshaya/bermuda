@@ -10,7 +10,7 @@ interface AppProps {
 }
 
 interface AppState {
-  map: Array<Array<string>>;
+  map: db.MapRepr;
   tiles: db.TileDict;
 }
 
@@ -28,8 +28,6 @@ class App extends React.Component<AppProps, AppState> {
     const map = await db.GetGridForGame(user.game_id);
     const tiles = await db.GetTiles();
     this.setState({map, tiles});
-    console.log(map);
-    console.log(tiles);
   }
   
   render() {
@@ -42,7 +40,7 @@ class App extends React.Component<AppProps, AppState> {
         <button onClick={db.SignOut}> Log Out </button>
       </header>
       <div className="content">
-        <Map />
+        <Map map={this.state.map} tiles={this.state.tiles}/>
         <div className="sidebar">
           <div className="turn-info">
             <p>Turn Number: 1</p>

@@ -9,8 +9,8 @@ import { UserData } from './providers/UserData';
 import { auth, GetShipAndGameForUser, ShipAndGame } from "./firebase";
 
 export class Router extends React.Component<{}, {user: null | UserData}> {
-  constructor() {
-    super({});
+  constructor(props: {}) {
+    super(props);
     this.state = {user: null};
   }
 

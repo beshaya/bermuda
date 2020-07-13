@@ -1,12 +1,10 @@
 import * as React from 'react';
-import '../styles/Tile.css';
+import { TileInfo } from '../firebase';
 
-export const Tile:React.FunctionComponent<{ initial?: string }> = ({ initial = "" }) => {
-  const [notes] = React.useState(initial);
-
+export function Tile(props: {tileInfo: TileInfo}) {
     return (
-        <td className="tile">
-            {notes}
+        <td className="tile" style={{backgroundColor: props.tileInfo.bg_color}}>
+          <div className="hover"> {props.tileInfo.hover_text} </div>
         </td>
     );
   }

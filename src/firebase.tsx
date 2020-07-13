@@ -59,9 +59,11 @@ export async function GetShipAndGameForUser(user: firebase.User): Promise<ShipAn
   }
 }
 
+export type MapRepr = Array<Array<string>>
+
 // Returns a 2d Array representing the entire map. Each element in the array is a string which can be looked up in
 // the Tiles dictionary.
-export async function GetGridForGame(game_id: string): Promise<Array<Array<string>>> {
+export async function GetGridForGame(game_id: string): Promise<MapRepr> {
   try {
     const querySnapshot = await firestore.collection('maps').where('game_id', '==', game_id).get();
     if (querySnapshot.empty) {
@@ -69,13 +71,13 @@ export async function GetGridForGame(game_id: string): Promise<Array<Array<strin
     }
     const map = querySnapshot.docs[0].data();
     const flat_grid = map['grid'] as Array<string>;
-    const x_size = map['x_size'] as number;
-    const y_size = map['y_size'] as number;
-    if (x_size * y_size !== flat_grid.length) {
+    const rows = map['rows'] as number;
+    const cols = map['cols'] as number;
+    if (rows * cols !== flat_grid.length) {
       return Promise.reject('DB error: Grid size does not match specified dimensions');
     }
     const folded_grid = [];
-    while(flat_grid.length) folded_grid.push(flat_grid.splice(0,y_size));
+    while(flat_grid.length) folded_grid.push(flat_grid.splice(0,cols));
     return folded_grid;
   } catch (error) {
     return Promise.reject(error);
@@ -83,7 +85,7 @@ export async function GetGridForGame(game_id: string): Promise<Array<Array<strin
 }
 
 // Information for rendering a single tile.
-export interface Tile {
+export interface TileInfo {
   bg_color: string;
   bg_image: string;
   description_text: string;
@@ -92,7 +94,7 @@ export interface Tile {
 }
 
 // Dictionary for looking up tiles by name.
-export type TileDict = {[props: string]: Tile}
+export type TileDict = {[props: string]: TileInfo}
 
 // Fetches the list of all tile types in the database.
 export async function GetTiles(): Promise<TileDict> {
@@ -100,7 +102,7 @@ export async function GetTiles(): Promise<TileDict> {
   const result: TileDict = {};
   for (var i = 0; i < querySnapshot.size; ++i) {
     const doc = querySnapshot.docs[i];
-    result[doc.id] = doc.data() as Tile;
+    result[doc.id] = doc.data() as TileInfo;
   }
   return result;
 }
