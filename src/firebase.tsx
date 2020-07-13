@@ -3,14 +3,14 @@ import 'firebase/auth';
 import 'firebase/firestore';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDqAp9356bLfSL-IhTX2NMTcerekmCTYgk",
-    authDomain: "bermuda-6e374.firebaseapp.com",
-    databaseURL: "https://bermuda-6e374.firebaseio.com",
-    projectId: "bermuda-6e374",
-    storageBucket: "bermuda-6e374.appspot.com",
-    messagingSenderId: "1093935326369",
-    appId: "1:1093935326369:web:d1660d17eb45f22a8efce0",
-    measurementId: "G-LFVJCPWDCY"
+  apiKey: "AIzaSyDqAp9356bLfSL-IhTX2NMTcerekmCTYgk",
+  authDomain: "bermuda-6e374.firebaseapp.com",
+  databaseURL: "https://bermuda-6e374.firebaseio.com",
+  projectId: "bermuda-6e374",
+  storageBucket: "bermuda-6e374.appspot.com",
+  messagingSenderId: "1093935326369",
+  appId: "1:1093935326369:web:d1660d17eb45f22a8efce0",
+  measurementId: "G-LFVJCPWDCY"
 };
 firebase.initializeApp(firebaseConfig);
 export const auth = firebase.auth();

@@ -17,11 +17,11 @@ export function Map(props: {map: MapRepr, tiles: TileDict}) {
     return <tbody>{map}</tbody>;
   }
 
-    return (
-      <table className="map">
-        {renderTiles()}
-      </table>
-    );
-  }
+  return (
+    <table className="map">
+      {renderTiles()}
+    </table>
+  );
+}
   
-  export default Map;
+export default Map;
