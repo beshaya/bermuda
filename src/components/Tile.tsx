@@ -8,5 +8,5 @@ export function Tile(props: {tileInfo: TileInfo}) {
     </td>
   );
 }
-  
+
 export default Tile;

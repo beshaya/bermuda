@@ -2,7 +2,7 @@ import * as React from 'react';
 import Tile from './Tile';
 import { MapRepr, TileDict } from '../firebase';
 import '../styles/Map.css';
-  
+
 export function Map(props: {map: MapRepr, tiles: TileDict}) {
   function renderTiles() {
     const map = [];
@@ -23,5 +23,5 @@ export function Map(props: {map: MapRepr, tiles: TileDict}) {
     </table>
   );
 }
-  
+
 export default Map;

@@ -29,7 +29,7 @@ class App extends React.Component<AppProps, AppState> {
     const tiles = await db.GetTiles();
     this.setState({map, tiles});
   }
-  
+
   render() {
     const user = this.props.userData;
     return (
