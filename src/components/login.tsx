@@ -7,7 +7,7 @@ export function Login() {
       <h1>Bermuda</h1>
       <button onClick={SignInWithGoogle}> Log In </button>
     </header>
-  )
+  );
 }
 
 export default Login;

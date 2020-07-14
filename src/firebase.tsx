@@ -30,7 +30,7 @@ export const SignInWithGoogle = () => {
 
 export const SignOut = () => {
   auth.signOut();
-}
+};
 
 export interface ShipAndGame {
   game_id: string;
@@ -52,10 +52,10 @@ export async function GetShipAndGameForUser(user: firebase.User): Promise<ShipAn
     const ship_info = querySnapshot.docs[0].data();
     const game_id = ship_info['game_id'] as string;
     const ship_name = ship_info['display_name'] as string;
-    const ship_and_game = {ship_id, game_id, ship_name}
+    const ship_and_game = {ship_id, game_id, ship_name};
     return ship_and_game;
   } catch(error) {
-    return Promise.reject(error)
+    return Promise.reject(error);
   }
 }
 

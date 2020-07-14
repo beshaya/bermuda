@@ -3,7 +3,7 @@ import './App.css';
 import Map from './components/Map';
 import * as db from './firebase';
 import { UserData } from "./providers/UserData";
-import schooner from "./assets/ships/two-masted-schooner.jpg"
+import schooner from "./assets/ships/two-masted-schooner.jpg";
 
 interface AppProps {
   userData: UserData;

@@ -21,20 +21,20 @@ export class Router extends React.Component<{}, {user: null | UserData}> {
         return;
       }
       const ship_and_game: ShipAndGame = await GetShipAndGameForUser(userAuth);
-      const user_data = {user: userAuth, ...ship_and_game}
+      const user_data = {user: userAuth, ...ship_and_game};
       this.setState({ user: user_data });
     });
   };
 
   render() {
     if (!this.state.user) {
-      return (<Login></Login>)
+      return (<Login></Login>);
     }
     return (
       <BrowserRouter>
         <Route path="/"><App userData={this.state.user} /></Route>
       </BrowserRouter>
-    )
+    );
   }
 }
 
