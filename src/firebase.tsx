@@ -46,7 +46,7 @@ export async function GetShipAndGameForUser(user: firebase.User): Promise<ShipAn
       return Promise.reject('User is not assigned to any ships');
     }
     if (querySnapshot.size > 1) {
-      console.warn('User is assigned to multiploe ships. This is not currently supported, using the first ship.');
+      console.warn('User is assigned to multiple ships. This is not currently supported; using the first ship.');
     }
     const ship_id = querySnapshot.docs[0].id;
     const ship_info = querySnapshot.docs[0].data();
