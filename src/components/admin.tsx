@@ -1,7 +1,6 @@
 import React from 'react';
 import * as db from '../firebase';
 import { State } from '../providers/GameState';
-import { Redirect } from "react-router-dom";
 import { Map } from './Map';
 import { TileEditor } from './TileEditor';
 
@@ -35,10 +34,6 @@ class Admin extends React.Component<State, AdminState> {
   }
 
   render() {
-    if (!this.props.user.db_user.admin) {
-      return (<Redirect to="/" />);
-    }
-
     return (
       <div className="app">
         <header className="header">

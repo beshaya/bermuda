@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FunctionComponent} from 'react';
 import {
   BrowserRouter,
   Route,
@@ -54,7 +54,7 @@ export class Router extends React.Component<{}, RouterState> {
     return (
       <BrowserRouter>
         <Switch>
-          <Route path='/admin'><Admin {...resolvedState} /></Route>
+          <AdminRoute user={this.state.user} path='/admin'><Admin {...resolvedState} /></AdminRoute>
           <Route path='/game'><App {...resolvedState} /></Route>
           <Route path='/'>{this.redirectOnLogin()}</Route>
         </Switch>
@@ -62,5 +62,30 @@ export class Router extends React.Component<{}, RouterState> {
     );
   }
 }
+
+type AuthRouteProps = {
+  user: UserData;
+  path: string;
+}
+
+const AdminRoute: FunctionComponent<AuthRouteProps> = ({children, user, path}) => {
+  return (
+    <Route
+      path={path}
+      render={({ location }) =>
+        user.db_user.admin ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: '/game',
+              state: { from: location }
+            }}
+          />
+        )
+      }
+    />
+  );
+};
 
 export default Router;
