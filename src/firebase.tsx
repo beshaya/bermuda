@@ -1,6 +1,7 @@
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
+import { UserData, NewDbUser } from './providers/UserData';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDqAp9356bLfSL-IhTX2NMTcerekmCTYgk",
@@ -32,13 +33,10 @@ export const SignOut = () => {
   auth.signOut();
 };
 
-export interface ShipAndGame {
-  game_id: string;
-  ship_id: string;
-  ship_name: string;
-}
-
-export async function GetShipAndGameForUser(user: firebase.User): Promise<ShipAndGame> {
+export async function GetUserData(user: firebase.User): Promise<UserData> {
+  if (!user.email) {
+    return Promise.reject('User has no associated email');
+  }
   try {
     const querySnapshot = await firestore.collection('ships').where("users", "array-contains", user.email).get();
     if (querySnapshot.empty) {
@@ -52,8 +50,17 @@ export async function GetShipAndGameForUser(user: firebase.User): Promise<ShipAn
     const ship_info = querySnapshot.docs[0].data();
     const game_id = ship_info['game_id'] as string;
     const ship_name = ship_info['display_name'] as string;
-    const ship_and_game = {ship_id, game_id, ship_name};
-    return ship_and_game;
+    const db_user = NewDbUser();
+    const user_data: UserData = {ship_id, game_id, ship_name, user: user, db_user};
+
+    const userDoc = await firestore.collection('users').doc(user.email).get();
+    if (userDoc.exists) {
+      const userDocData = userDoc.data();
+      if (userDocData) {
+        user_data.db_user.admin = (userDocData['admin'] === true);
+      }
+    }
+    return user_data;
   } catch(error) {
     return Promise.reject(error);
   }

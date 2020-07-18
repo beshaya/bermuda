@@ -14,6 +14,9 @@
 
 .tile:hover {
   opacity: 90%;
+}
+
+.selected {
   outline-style: solid;
   outline-color: yellow;
 }
