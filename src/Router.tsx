@@ -1,41 +1,91 @@
-import React from 'react';
+import React, {FunctionComponent} from 'react';
 import {
   BrowserRouter,
-  Route
+  Route,
+  Switch,
+  Redirect,
 } from "react-router-dom";
 import App from './App';
 import Login from './components/login';
+import Admin from './components/admin';
+import { State } from './providers/GameState';
 import { UserData } from './providers/UserData';
-import { auth, GetShipAndGameForUser, ShipAndGame } from "./firebase";
+import * as db from "./firebase";
 
-export class Router extends React.Component<{}, {user: null | UserData}> {
+export interface RouterState {
+  user: null | UserData;
+  map: db.MapRepr;
+  tiles: db.TileDict;
+}
+
+export class Router extends React.Component<{}, RouterState> {
   constructor(props: {}) {
     super(props);
-    this.state = {user: null};
+    this.state = {user: null, map: [], tiles: {}};
   }
 
   componentDidMount = () => {
-    auth.onAuthStateChanged(async (userAuth) => {
+    db.auth.onAuthStateChanged(async (userAuth) => {
       if (!userAuth) {
         this.setState({ user: null });
         return;
       }
-      const ship_and_game: ShipAndGame = await GetShipAndGameForUser(userAuth);
-      const user_data = {user: userAuth, ...ship_and_game};
-      this.setState({ user: user_data });
+      const user = await db.GetUserData(userAuth);
+      const map = await db.GetGridForGame(user.game_id);
+      const tiles = await db.GetTiles();
+
+      this.setState({ user, map, tiles });
     });
   };
 
+  redirectOnLogin() {
+    if (this.state.user && this.state.user.db_user.admin) {
+      return (<Redirect to='/admin' />);
+    } else {
+      return (<Redirect to='/game' />);
+    }
+  }
   render() {
     if (!this.state.user) {
       return (<Login></Login>);
     }
+    // Reassign from RouterState to State to convert user from <User | null> to <User>
+    const resolvedState: State = {user: this.state.user, map: this.state.map, tiles: this.state.tiles};
     return (
       <BrowserRouter>
-        <Route path="/"><App userData={this.state.user} /></Route>
+        <Switch>
+          <AdminRoute user={this.state.user} path='/admin'><Admin {...resolvedState} /></AdminRoute>
+          <Route path='/game'><App {...resolvedState} /></Route>
+          <Route path='/'>{this.redirectOnLogin()}</Route>
+        </Switch>
       </BrowserRouter>
     );
   }
 }
+
+type AuthRouteProps = {
+  user: UserData;
+  path: string;
+}
+
+const AdminRoute: FunctionComponent<AuthRouteProps> = ({children, user, path}) => {
+  return (
+    <Route
+      path={path}
+      render={({ location }) =>
+        user.db_user.admin ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: '/game',
+              state: { from: location }
+            }}
+          />
+        )
+      }
+    />
+  );
+};
 
 export default Router;

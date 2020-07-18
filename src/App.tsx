@@ -4,34 +4,25 @@ import Map from './components/Map';
 import * as db from './firebase';
 import { UserData } from "./providers/UserData";
 import schooner from "./assets/ships/two-masted-schooner.jpg";
+import { State } from './providers/GameState';
 
 interface AppProps {
   userData: UserData;
 }
 
 interface AppState {
-  map: db.MapRepr;
-  tiles: db.TileDict;
 }
 
-class App extends React.Component<AppProps, AppState> {
-  constructor(props: AppProps) {
+class App extends React.Component<State, AppState> {
+  constructor(props: State) {
     super(props);
-    this.state = {
-      map: [[]],
-      tiles: {}
-    };
+    this.state = {};
   }
 
-  async componentDidMount() {
-    const user: UserData = this.props.userData;
-    const map = await db.GetGridForGame(user.game_id);
-    const tiles = await db.GetTiles();
-    this.setState({map, tiles});
-  }
+  onTileClicked(row: number, col: number) {}
 
   render() {
-    const user = this.props.userData;
+    const user = this.props.user;
     return (
       <div className="app">
         <header className="header">
@@ -40,7 +31,7 @@ class App extends React.Component<AppProps, AppState> {
           <button onClick={db.SignOut}> Log Out </button>
         </header>
         <div className="content">
-          <Map map={this.state.map} tiles={this.state.tiles}/>
+          <Map map={this.props.map} tiles={this.props.tiles} onClick={this.onTileClicked}/>
           <div className="sidebar">
             <div className="turn-info">
               <p>Turn Number: 1</p>
