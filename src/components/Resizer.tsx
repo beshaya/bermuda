@@ -1,14 +1,14 @@
 import React from 'react';
+import { MapRepr, SaveGridForGame } from '../firebase';
 
 interface ResizerProps {
-  rows: number;
-  cols: number;
-  submit: (rows: number, cols: number) => void;
+  map: MapRepr;
+  gameId: string;
 }
 
 interface ResizerState {
-  rows: string,
-  cols: string,
+  rows: string;
+  cols: string;
 }
 
 /**
@@ -18,8 +18,8 @@ export class Resizer extends React.Component<ResizerProps, ResizerState> {
   constructor(props: ResizerProps) {
     super(props);
     this.state = {
-      rows: this.props.rows.toString(),
-      cols: this.props.cols.toString(),
+      rows: this.props.map.length.toString(),
+      cols: this.props.map[0].length.toString(),
     };
   }
 
@@ -36,17 +36,36 @@ export class Resizer extends React.Component<ResizerProps, ResizerState> {
 
     var rows = parseInt(this.state.rows, 10);
     if (isNaN(rows)) {
-      this.setState({rows: this.props.rows.toString()});
-      rows = this.props.rows;
+      this.setState({rows: this.props.map.length.toString()});
+      return;
     }
 
     var cols = parseInt(this.state.cols, 10);
     if (isNaN(cols)) {
-      this.setState({cols: this.props.cols.toString()});
-      cols = this.props.cols;
+      this.setState({cols: this.props.map[0].length.toString()});
+      return;
     }
 
-    this.props.submit(rows, cols);
+    if (rows < this.props.map.length || cols < this.props.map[0].length) {
+      if (!window.confirm('Warning, the new map size is smaller than the old size. Continuing will drop tiles.')) {
+        return;
+      }
+    }
+
+    // Creates a new 1D representation of the resized map, filling in new tiles with ocean.
+    // Building the map in 1D here is easer than building it in 2d, just to have it be flattened in the db.
+    const newMap: Array<string> = [];
+    for (var r = 0; r < rows; ++r) {
+      for (var c = 0; c < cols; ++c) {
+        if (r < this.props.map.length && c < this.props.map[r].length) {
+          newMap.push(this.props.map[r][c]);
+        } else {
+          newMap.push('ocean');
+        }
+      }
+    }
+
+    SaveGridForGame(this.props.gameId, newMap, rows, cols);
   }
 
   render() {

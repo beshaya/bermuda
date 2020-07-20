@@ -34,10 +34,6 @@ class Admin extends React.Component<State, AdminState> {
     });
   }
 
-  handleResize(rows: number, cols: number) {
-    console.log(rows + ', ' + cols);
-  }
-
   render() {
     return (
       <div className="app">
@@ -53,7 +49,7 @@ class Admin extends React.Component<State, AdminState> {
               selectedRow={this.state.selectedRow}
               selectedCol={this.state.selectedCol}
               onClick={this.onTileClicked.bind(this)} />
-            <Resizer rows={this.props.map.length} cols={this.props.map[0].length} submit={this.handleResize} />
+            <Resizer map={this.props.map} gameId={this.props.user.game_id} />
           </div>
           <div className="sidebar">
             <div className="turn-info">
