@@ -4,21 +4,18 @@ import { useForm } from "react-hook-form";
 
 export function TileEditor(props: {tileInfo: TileInfo, tileName: string}) {
   const { register, setValue, handleSubmit, errors } = useForm<TileInfo>();
-  const onSubmit = handleSubmit(({ bg_color, bg_image, hover_text, description_text, link }) => {
+  const onSubmit = handleSubmit( async ({ bg_color, bg_image, hover_text, description_text, link }) => {
     const tile = firestore.collection("tiles").doc(props.tileName);
-    return tile.update({ 
-      bg_color: bg_color,
-      bg_image: bg_image,
-      hover_text: hover_text,
-      description_text: description_text,
-      link: link
-    })
-    .then(function() {
-        console.log("Document successfully updated!");
-    })
-    .catch(function(error) {
-        console.error("Error updating document: ", error);
-    });
+    try{const result = await tile.update({ 
+        bg_color: bg_color,
+        bg_image: bg_image,
+        hover_text: hover_text,
+        description_text: description_text,
+        link: link
+      });      
+    } catch {
+      console.log("Update failed")
+    }
   });
 
   return (
