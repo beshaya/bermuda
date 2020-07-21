@@ -19,6 +19,9 @@ export interface RouterState {
 }
 
 export class Router extends React.Component<{}, RouterState> {
+  unsubscribeMap = ()=>{};
+  unsubscribeTiles = ()=>{};
+
   constructor(props: {}) {
     super(props);
     this.state = {user: null, map: [], tiles: {}};
@@ -31,12 +34,23 @@ export class Router extends React.Component<{}, RouterState> {
         return;
       }
       const user = await db.GetUserData(userAuth);
-      const map = await db.GetGridForGame(user.game_id);
-      const tiles = await db.GetTiles();
 
-      this.setState({ user, map, tiles });
+      this.unsubscribeMap = db.SubscribeToMap(user.game_id, (map: db.MapRepr) => {
+        this.setState({ map: map });
+      });
+
+      this.unsubscribeTiles = db.SubscribeToTiles((tiles: db.TileDict) => {
+        this.setState({ tiles: tiles });
+      });
+
+      this.setState({ user });
     });
   };
+
+  componentWillUnmount() {
+    this.unsubscribeTiles();
+    this.unsubscribeMap();
+  }
 
   redirectOnLogin() {
     if (this.state.user && this.state.user.db_user.admin) {
@@ -48,6 +62,10 @@ export class Router extends React.Component<{}, RouterState> {
   render() {
     if (!this.state.user) {
       return (<Login></Login>);
+    }
+    if (this.state.map.length === 0 || Object.keys(this.state.tiles).length === 0) {
+      // Don't try to render the map until we load it!
+      return (<div>Loading...</div>);
     }
     // Reassign from RouterState to State to convert user from <User | null> to <User>
     const resolvedState: State = {user: this.state.user, map: this.state.map, tiles: this.state.tiles};

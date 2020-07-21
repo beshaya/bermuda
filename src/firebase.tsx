@@ -70,25 +70,24 @@ export type MapRepr = Array<Array<string>>
 
 // Returns a 2d Array representing the entire map. Each element in the array is a string which can be looked up in
 // the Tiles dictionary.
-export async function GetGridForGame(game_id: string): Promise<MapRepr> {
-  try {
-    const querySnapshot = await firestore.collection('maps').where('game_id', '==', game_id).get();
+export function SubscribeToMap(game_id: string, onNewMap: (map: MapRepr) => void): VoidFunction {
+  return firestore.collection('maps').where('game_id', '==', game_id).onSnapshot((querySnapshot) => {
     if (querySnapshot.empty) {
-      return Promise.reject('No map found');
+      console.warn('No map found for game ' + game_id);
+      onNewMap([]);
     }
     const map = querySnapshot.docs[0].data();
     const flat_grid = map['grid'] as Array<string>;
     const rows = map['rows'] as number;
     const cols = map['cols'] as number;
     if (rows * cols !== flat_grid.length) {
-      return Promise.reject('DB error: Grid size does not match specified dimensions');
+      console.error('DB error: Grid size does not match specified dimensions');
+      onNewMap([]);
     }
     const folded_grid = [];
     while(flat_grid.length) folded_grid.push(flat_grid.splice(0,cols));
-    return folded_grid;
-  } catch (error) {
-    return Promise.reject(error);
-  }
+    onNewMap(folded_grid);
+  });
 }
 
 // Information for rendering a single tile.
@@ -104,14 +103,15 @@ export interface TileInfo {
 export type TileDict = {[props: string]: TileInfo}
 
 // Fetches the list of all tile types in the database.
-export async function GetTiles(): Promise<TileDict> {
-  const querySnapshot = await firestore.collection('tiles').get();
-  const result: TileDict = {};
-  for (var i = 0; i < querySnapshot.size; ++i) {
-    const doc = querySnapshot.docs[i];
-    result[doc.id] = doc.data() as TileInfo;
-  }
-  return result;
+export function SubscribeToTiles(onNewTiles: (newTiles: TileDict) => void ): VoidFunction {
+  return firestore.collection('tiles').onSnapshot((querySnapshot) => {
+    const result: TileDict = {};
+    for (var i = 0; i < querySnapshot.size; ++i) {
+      const doc = querySnapshot.docs[i];
+      result[doc.id] = doc.data() as TileInfo;
+    }
+    onNewTiles(result);
+  });
 }
 
 // Updates tile properties
