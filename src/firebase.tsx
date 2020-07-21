@@ -124,3 +124,13 @@ export function SubscribeToTiles(onNewTiles: (newTiles: TileDict) => void ): Voi
     onNewTiles(result);
   });
 }
+
+// Updates tile properties
+export async function UpdateTile(tileName: string, tileInfo: TileInfo) {
+  const tile = firestore.collection("tiles").doc(tileName);
+  try {
+    await tile.update(tileInfo);
+  } catch {
+    console.error("Update failed");
+  }
+}

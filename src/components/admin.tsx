@@ -57,7 +57,7 @@ class Admin extends React.Component<State, AdminState> {
               <p>Waiting for GM...</p>
             </div>
             <div className="tile-info">
-              <TileEditor tileInfo={this.state.selectedTile} tileName={this.state.tileName}></TileEditor>
+              <TileEditor tileName={this.state.tileName} tileInfo={this.state.selectedTile}></TileEditor>
             </div>
           </div>
         </div>
