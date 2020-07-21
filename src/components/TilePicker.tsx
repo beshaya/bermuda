@@ -10,7 +10,7 @@ export function TilePicker(props: {tileName: string, map: db.MapRepr, tiles: db.
     <option key={tileName}>{tileName}</option>
   )
 
-  const onSubmit = handleSubmit(async ({tileName: tileName}) => {
+  const onSubmit = handleSubmit(async ({tileName}) => {
     changeTile(tileName);
   });
 
@@ -33,8 +33,8 @@ export function TilePicker(props: {tileName: string, map: db.MapRepr, tiles: db.
 
   return (
     <form onSubmit={onSubmit}>
-      <label> Tile: {props.tileName}
-        <input name="tileName" type="text" list="tiles" ref={register} />
+      <label> Tile:
+        <input name="tileName" type="text" list="tiles" defaultValue={props.tileName} ref={register} />
         <datalist id="tiles">{tiles}</datalist>
       </label>
     </form>
