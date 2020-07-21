@@ -73,7 +73,13 @@ class Admin extends React.Component<State, AdminState> {
               <p>Waiting for GM...</p>
             </div>
             <div className="tile-img">
-              <TilePicker tileName={this.state.tileName} tiles={this.props.tiles} />
+              <TilePicker
+                tileName={this.state.tileName}
+                map={this.props.map}
+                tiles={this.props.tiles}
+                selectedRow={this.state.selectedRow}
+                selectedCol={this.state.selectedCol} 
+                gameId={this.props.user.game_id}/>
             </div>
             <div id="tile-info" className="tile-info">
               <TileEditor tileInfo={this.state.selectedTile} tileName={this.state.tileName} />
