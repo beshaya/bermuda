@@ -91,6 +91,17 @@ export async function GetGridForGame(game_id: string): Promise<MapRepr> {
   }
 }
 
+export async function SaveGridForGame(game_id: string, newMap: Array<string>, rows: number, cols: number) {
+  const querySnapshot = await firestore.collection('maps').where('game_id', '==', game_id).get();
+  const map_id = querySnapshot.docs[0].id;
+  const doc = firestore.collection('maps').doc(map_id);
+  await doc.update({
+    rows: rows,
+    cols: cols,
+    grid: newMap,
+  });
+}
+
 // Information for rendering a single tile.
 export interface TileInfo {
   bg_color: string;

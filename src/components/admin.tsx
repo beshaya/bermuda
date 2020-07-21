@@ -3,6 +3,7 @@ import * as db from '../firebase';
 import { State } from '../providers/GameState';
 import { Map } from './Map';
 import { TileEditor } from './TileEditor';
+import { Resizer } from './Resizer';
 
 interface AdminState {
   selectedRow: number;
@@ -42,11 +43,14 @@ class Admin extends React.Component<State, AdminState> {
           <button onClick={db.SignOut}> Log Out </button>
         </header>
         <div className="content">
-          <Map map={this.props.map}
-            tiles={this.props.tiles}
-            selectedRow={this.state.selectedRow}
-            selectedCol={this.state.selectedCol}
-            onClick={this.onTileClicked.bind(this)} />
+          <div className="mapArea">
+            <Map map={this.props.map}
+              tiles={this.props.tiles}
+              selectedRow={this.state.selectedRow}
+              selectedCol={this.state.selectedCol}
+              onClick={this.onTileClicked.bind(this)} />
+            <Resizer map={this.props.map} gameId={this.props.user.game_id} />
+          </div>
           <div className="sidebar">
             <div className="turn-info">
               <p>Turn Number: 1</p>
