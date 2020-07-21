@@ -2,7 +2,15 @@ import React from 'react';
 import * as db from "../firebase";
 import { useForm } from "react-hook-form";
 
-export function TilePicker(props: {tileName: string, map: db.MapRepr, tiles: db.TileDict, selectedRow?: number, selectedCol?: number, gameId: string}) {
+export function TilePicker(props: {
+  tileName: string,
+  tileInfo: db.TileInfo,
+  map: db.MapRepr,
+  tiles: db.TileDict,
+  selectedRow?: number,
+  selectedCol?: number,
+  gameId: string
+}) {
   const { register, handleSubmit } = useForm<{tileName: string}>();
 
   const tileList = [...Object.keys(props.tiles)]
@@ -28,7 +36,7 @@ export function TilePicker(props: {tileName: string, map: db.MapRepr, tiles: db.
   }
 
   function createTile(tileName: string) {
-    console.log(tileName);
+    db.AddTile(tileName, props.tileInfo);
   }
 
   return (

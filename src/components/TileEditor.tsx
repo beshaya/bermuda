@@ -21,6 +21,7 @@ export function TileEditor(props: {
     <div>
       <TilePicker
         tileName={props.tileName}
+        tileInfo={props.tileInfo}
         map={props.map}
         tiles={props.tiles}
         selectedRow={props.selectedRow}
