@@ -101,12 +101,12 @@ export async function SaveGridForGame(game_id: string, newMap: Array<string>, ro
   });
 }
 
-export async function UpdateGridForGame(game_id: string, tiles: Array<string>) {
+export async function UpdateGridForGame(game_id: string, map: Array<string>) {
   const querySnapshot = await firestore.collection('maps').where('game_id', '==', game_id).get();
   const map_id = querySnapshot.docs[0].id;
   const doc = firestore.collection('maps').doc(map_id);
   await doc.update({
-    grid: tiles,
+    grid: map,
   });
 }
 
