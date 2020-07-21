@@ -1,43 +1,44 @@
 import React from 'react';
 import * as db from "../firebase";
-import { Console } from 'console';
+import { useForm } from "react-hook-form";
 
 export function TilePicker(props: {tileName: string, map: db.MapRepr, tiles: db.TileDict, selectedRow?: number, selectedCol?: number, gameId: string}) {
-  const tileList = ["Create Tile", ...Object.keys(props.tiles)]
+  const { register, handleSubmit } = useForm<{tileName: string}>();
+
+  const tileList = [...Object.keys(props.tiles)]
   const tiles = tileList.map( (tileName) =>
     <option key={tileName}>{tileName}</option>
   )
 
+  const onSubmit = handleSubmit(async ({tileName: tileName}) => {
+    changeTile(tileName);
+  });
+
   function changeTile(tileName: string) {
     if (!tileList.includes(tileName)) {
-      return null
-    } else if (tileName === "Create Tile") {
-      createTile()
+      createTile(tileName);
     } else {
-    const row = props.selectedRow;
-    const col = props.selectedCol;
-    if (row != undefined && col != undefined) {
-      props.map[row][col] = tileName
-      const map = props.map.flat();
-      db.UpdateGridForGame(props.gameId, map)
-    }}
+      const row = props.selectedRow;
+      const col = props.selectedCol;
+      if (row !== undefined && col !== undefined) {
+        props.map[row][col] = tileName;
+        const map = props.map.flat();
+        db.UpdateGridForGame(props.gameId, map);
+      }}
   }
 
-  function createTile() {
-    console.log("New Tile!")
+  function createTile(tileName: string) {
+    console.log(tileName);
   }
 
   return (
-    <div>
-      <h2>Tile: {props.tileName}</h2>
-      <select
-        defaultValue={props.tileName} 
-        onChange={e => changeTile(e.currentTarget.value)}
-      >
-        {tiles}
-      </select>
-    </div>
-  );
+    <form onSubmit={onSubmit}>
+      <label> Tile: {props.tileName}
+        <input name="tileName" type="text" list="tiles" ref={register} />
+        <datalist id="tiles">{tiles}</datalist>
+      </label>
+    </form>
+  )
 }
 
 export default TilePicker;
