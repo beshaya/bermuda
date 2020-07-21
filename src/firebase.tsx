@@ -1,7 +1,7 @@
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
-import { UserData, NewDbUser } from './providers/UserData';
+import { PlayerData, NewDbUser, DbUser } from './providers/UserData';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDqAp9356bLfSL-IhTX2NMTcerekmCTYgk",
@@ -33,12 +33,32 @@ export const SignOut = () => {
   auth.signOut();
 };
 
-export async function GetUserData(user: firebase.User): Promise<UserData> {
+export async function GetDbUser(user: firebase.User): Promise<DbUser> {
   if (!user.email) {
     return Promise.reject('User has no associated email');
   }
+
+  const db_user = NewDbUser(user.email);
+  const userDoc = await firestore.collection('users').doc(user.email).get();
+  if (userDoc.exists) {
+    const userDocData = userDoc.data();
+    if (userDocData) {
+      db_user.admin = (userDocData['admin'] === true);
+      db_user.last_game = userDocData['last_game'] as string;
+    }
+
+    if (db_user.admin && ! db_user.last_game) {
+      // Admins need to know which game to load. Pick the first game as the default.
+      // TODO(Ben): They don't really. Just go to a blank admin page.
+      db_user.last_game = (await firestore.collection('games').get()).docs[0].id;
+    }
+  }
+  return db_user;
+}
+
+export async function GetPlayerData(email: string): Promise<PlayerData> {
   try {
-    const querySnapshot = await firestore.collection('ships').where("users", "array-contains", user.email).get();
+    const querySnapshot = await firestore.collection('ships').where("users", "array-contains", email).get();
     if (querySnapshot.empty) {
       console.warn('User is not assigned to any ships');
       return Promise.reject('User is not assigned to any ships');
@@ -50,16 +70,8 @@ export async function GetUserData(user: firebase.User): Promise<UserData> {
     const ship_info = querySnapshot.docs[0].data();
     const game_id = ship_info['game_id'] as string;
     const ship_name = ship_info['display_name'] as string;
-    const db_user = NewDbUser();
-    const user_data: UserData = {ship_id, game_id, ship_name, user: user, db_user};
+    const user_data: PlayerData = {ship_id, game_id, ship_name};
 
-    const userDoc = await firestore.collection('users').doc(user.email).get();
-    if (userDoc.exists) {
-      const userDocData = userDoc.data();
-      if (userDocData) {
-        user_data.db_user.admin = (userDocData['admin'] === true);
-      }
-    }
     return user_data;
   } catch(error) {
     return Promise.reject(error);

@@ -2,36 +2,57 @@ import React from 'react';
 import './App.css';
 import Map from './components/Map';
 import * as db from './firebase';
-import { UserData } from "./providers/UserData";
+import { DbUser, PlayerData } from "./providers/UserData";
 import schooner from "./assets/ships/two-masted-schooner.jpg";
-import { State } from './providers/GameState';
 
 interface AppProps {
-  userData: UserData;
+  tiles: db.TileDict;
+  user: DbUser;
 }
 
 interface AppState {
+  playerData: PlayerData | null;
+  map: db.MapRepr;
 }
 
-class App extends React.Component<State, AppState> {
-  constructor(props: State) {
+class App extends React.Component<AppProps, AppState> {
+  unsubscribeMap = ()=>{};
+
+  constructor(props: AppProps) {
     super(props);
-    this.state = {};
+    this.state = {playerData: null, map: []};
+  }
+
+  async componentDidMount() {
+    const playerData = await db.GetPlayerData(this.props.user.email);
+    this.setState({playerData});
+
+    this.unsubscribeMap = db.SubscribeToMap(playerData.game_id, (map: db.MapRepr) => {
+      this.setState({ map: map });
+    });
+
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeMap();
   }
 
   onTileClicked(row: number, col: number) {}
 
   render() {
-    const user = this.props.user;
+    const player = this.state.playerData;
+    if (!player || this.state.map.length === 0) {
+      return (<div>Loading...</div>);
+    }
     return (
       <div className="app">
         <header className="header">
           <h1>Bermuda</h1>
-          <div className="user-info">Welcome {user.user.displayName}, captain of {user.ship_name} </div>
+          <div className="user-info">Welcome {this.props.user.email}, captain of {player.ship_name} </div>
           <button onClick={db.SignOut}> Log Out </button>
         </header>
         <div className="content">
-          <Map map={this.props.map} tiles={this.props.tiles} onClick={this.onTileClicked}/>
+          <Map map={this.state.map} tiles={this.props.tiles} onClick={this.onTileClicked}/>
           <div className="sidebar">
             <div className="turn-info">
               <p>Turn Number: 1</p>
