@@ -42,9 +42,8 @@ export function TileEditor(props: {tileName: string, tileInfo: db.TileInfo}) {
       </label>
       <br />
       <label>Description Text
-        <input
+        <textarea
           name="description_text"
-          type="text"
           key={`description_text:${props.tileInfo.description_text}`}
           defaultValue={props.tileInfo.description_text}
           ref={register}
