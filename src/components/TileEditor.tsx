@@ -1,28 +1,18 @@
 import React from 'react';
-import { firestore, TileInfo } from '../firebase';
+import * as db from "../firebase";
 import { useForm } from "react-hook-form";
 
-export function TileEditor(props: {tileInfo: TileInfo, tileName: string}) {
-  const { register, setValue, handleSubmit, errors } = useForm<TileInfo>();
-  const onSubmit = handleSubmit( async ({ bg_color, bg_image, hover_text, description_text, link }) => {
-    const tile = firestore.collection("tiles").doc(props.tileName);
-    try{const result = await tile.update({ 
-        bg_color: bg_color,
-        bg_image: bg_image,
-        hover_text: hover_text,
-        description_text: description_text,
-        link: link
-      });      
-    } catch {
-      console.log("Update failed")
-    }
+export function TileEditor(props: {tileName: string, tileInfo: db.TileInfo}) {
+  const { register, handleSubmit } = useForm<db.TileInfo>();
+  const onSubmit = handleSubmit(async (tileInfo: db.TileInfo) => {
+    db.UpdateTile(props.tileName, tileInfo);
   });
 
   return (
     <form onSubmit={onSubmit}>
       <h2>{props.tileName}</h2>
       <label>Color
-        <input 
+        <input
           name="bg_color"
           type="text"
           key={`bg_color:${props.tileInfo.bg_color}`}
@@ -48,7 +38,7 @@ export function TileEditor(props: {tileInfo: TileInfo, tileName: string}) {
           key={`hover_text:${props.tileInfo.hover_text}`}
           defaultValue={props.tileInfo.hover_text}
           ref={register}
-          />
+        />
       </label>
       <br />
       <label>Description Text
@@ -62,12 +52,12 @@ export function TileEditor(props: {tileInfo: TileInfo, tileName: string}) {
       </label>
       <br />
       <label>Link
-       <input
-         name="link"
-         type="text"
-         key={`link:${props.tileInfo.link}`}
-         defaultValue={props.tileInfo.link}
-         ref={register} />
+        <input
+          name="link"
+          type="text"
+          key={`link:${props.tileInfo.link}`}
+          defaultValue={props.tileInfo.link}
+          ref={register} />
       </label>
       <br />
       <input type="submit" value="Update Tile" />
