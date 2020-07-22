@@ -5,10 +5,7 @@ import { useForm } from "react-hook-form";
 export function TileEditor(props: {
   tileName: string,
   tileInfo: db.TileInfo,
-  map: db.MapRepr,
   tiles: db.TileDict,
-  selectedRow?: number,
-  selectedCol?: number,
 }) {
   const { register, handleSubmit } = useForm<db.TileInfo>();
   const onSubmit = handleSubmit(async (tileInfo: db.TileInfo) => {

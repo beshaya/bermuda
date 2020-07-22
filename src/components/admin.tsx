@@ -10,8 +10,6 @@ import { TileEditor } from './TileEditor';
 interface AdminState {
   selectedRow: number | undefined;
   selectedCol: number | undefined;
-  selectedTile: db.TileInfo;
-  tileName: string;
 }
 
 class Admin extends React.Component<State, AdminState> {
@@ -20,8 +18,6 @@ class Admin extends React.Component<State, AdminState> {
     this.state = {
       selectedRow: 0,
       selectedCol: 0,
-      tileName: this.props.map[0][0],
-      selectedTile: this.props.tiles[this.props.map[0][0]],
     };
   }
 
@@ -33,13 +29,10 @@ class Admin extends React.Component<State, AdminState> {
       });
       return;
     }
-    const tileName: string = this.props.map[row][col];
-    const tileData = this.props.tiles[tileName];
+
     this.setState({
       selectedRow: row,
       selectedCol: col,
-      selectedTile: tileData,
-      tileName: tileName,
     });
   }
 
@@ -48,6 +41,29 @@ class Admin extends React.Component<State, AdminState> {
       selectedRow: undefined,
       selectedCol: undefined,
     });
+  }
+
+  renderTileEditor() {
+    if (this.state.selectedRow === undefined || this.state.selectedCol === undefined) {
+      return (<div />);
+    }
+    const tileName: string = this.props.map[this.state.selectedRow][this.state.selectedCol];
+    const tileInfo = this.props.tiles[tileName];
+    return (
+      <div className="tile-info">
+        <TilePicker
+          tileName={tileName}
+          tileInfo={tileInfo}
+          map={this.props.map}
+          tiles={this.props.tiles}
+          selectedRow={this.state.selectedRow}
+          selectedCol={this.state.selectedCol}
+          gameId={this.props.user.game_id} />
+        <TileEditor tileName={tileName}
+          tileInfo={tileInfo}
+          tiles={this.props.tiles} />
+      </div>
+    );
   }
 
   render() {
@@ -74,22 +90,7 @@ class Admin extends React.Component<State, AdminState> {
               <p>Turn Number: 1</p>
               <p>Waiting for GM...</p>
             </div>
-            <div className="tile-info">
-              <TilePicker
-                tileName={this.state.tileName}
-                tileInfo={this.state.selectedTile}
-                map={this.props.map}
-                tiles={this.props.tiles}
-                selectedRow={this.state.selectedRow}
-                selectedCol={this.state.selectedCol}
-                gameId={this.props.user.game_id} />
-              <TileEditor tileName={this.state.tileName}
-                tileInfo={this.state.selectedTile}
-                map={this.props.map}
-                tiles={this.props.tiles}
-                selectedRow={this.state.selectedRow}
-                selectedCol={this.state.selectedCol} />
-            </div>
+            {this.renderTileEditor()}
           </div>
         </div>
       </div>

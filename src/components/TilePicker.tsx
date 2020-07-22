@@ -13,10 +13,10 @@ export function TilePicker(props: {
 }) {
   const { register, handleSubmit } = useForm<{tileName: string}>();
 
-  const tileList = [...Object.keys(props.tiles)]
+  const tileList = [...Object.keys(props.tiles)];
   const tiles = tileList.map( (tileName) =>
     <option key={tileName}>{tileName}</option>
-  )
+  );
 
   const onSubmit = handleSubmit(async ({tileName}) => {
     changeTile(tileName);
@@ -51,7 +51,7 @@ export function TilePicker(props: {
         <datalist id="tiles">{tiles}</datalist>
       </label>
     </form>
-  )
+  );
 }
 
 export default TilePicker;
