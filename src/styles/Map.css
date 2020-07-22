@@ -1,15 +1,14 @@
 .map {
   border-spacing: 0;
-  background-color: cyan;
-  width: 1000px;
-  padding: 50px;
+  background-color:white;
 }
 
 .tile {
-  width: 100px;
-  height: 100px;
+  width: 200px;
+  height: 200px;
   padding: 0px;
-  background-size: 100px 100px;
+  background-size: 200px 200px;
+  text-align: center;
 }
 
 .tile:hover {
@@ -17,8 +16,8 @@
 }
 
 .selected {
-  outline-style: solid;
-  outline-color: yellow;
+  width: 200px;
+  height: 200px;
 }
 
 .hover {

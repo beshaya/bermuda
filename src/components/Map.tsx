@@ -15,11 +15,12 @@ export function Map(props: {map: MapRepr, tiles: TileDict, selectedRow?: number,
       }
       map.push(<tr key={r}>{tiles}</tr>);
     }
+
     return <tbody>{map}</tbody>;
   }
 
   return (
-    <table className="map">
+    <table id="map" className="map">
       {renderTiles()}
     </table>
   );
