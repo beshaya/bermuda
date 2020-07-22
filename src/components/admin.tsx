@@ -25,6 +25,13 @@ class Admin extends React.Component<State, AdminState> {
   }
 
   onTileClicked(row: number, col: number) {
+    if (this.state.selectedCol === col && this.state.selectedRow === row) {
+      this.setState({
+        selectedRow: undefined,
+        selectedCol: undefined,
+      });
+      return;
+    }
     const tileName: string = this.props.map[row][col];
     const tileData = this.props.tiles[tileName];
     this.setState({
