@@ -34,25 +34,13 @@ class Admin extends React.Component<State, AdminState> {
       tileName: tileName,
     });
   }
-  
+
   delesectOnClickOutside(event: any) {
-      const outsideClickListener = (event: any) => {
-          if (event.target.closest("#map") === null && event.target.closest("#tile-info") === null) {
-            this.setState({
-              selectedRow: undefined,
-              selectedCol: undefined,
-            })
-            console.log(event.target.closest("#map"))
-            removeClickListener()
-          }
-      }
-    
-      const removeClickListener = () => {
-          document.removeEventListener('click', outsideClickListener)
-      }
-    
-      document.addEventListener('click', outsideClickListener)
-    }
+    this.setState({
+      selectedRow: undefined,
+      selectedCol: undefined,
+    });
+  }
 
   render() {
     return (
@@ -87,4 +75,3 @@ class Admin extends React.Component<State, AdminState> {
 }
 
 export default Admin;
-  
