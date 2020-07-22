@@ -65,3 +65,7 @@
 .tile-img > img {
   width: 100%;
 }
+
+.mapArea {
+  padding: 50px;
+}

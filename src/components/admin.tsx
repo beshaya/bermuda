@@ -1,13 +1,14 @@
 import React from 'react';
 import * as db from '../firebase';
+import '../App.css';
 import { State } from '../providers/GameState';
 import { Map } from './Map';
 import { TileEditor } from './TileEditor';
 import { Resizer } from './Resizer';
 
 interface AdminState {
-  selectedRow: number;
-  selectedCol: number;
+  selectedRow: number | undefined;
+  selectedCol: number | undefined;
   selectedTile: db.TileInfo;
   tileName: string;
 }
@@ -33,6 +34,25 @@ class Admin extends React.Component<State, AdminState> {
       tileName: tileName,
     });
   }
+  
+  delesectOnClickOutside(event: any) {
+      const outsideClickListener = (event: any) => {
+          if (event.target.closest("#map") === null && event.target.closest("#tile-info") === null) {
+            this.setState({
+              selectedRow: undefined,
+              selectedCol: undefined,
+            })
+            console.log(event.target.closest("#map"))
+            removeClickListener()
+          }
+      }
+    
+      const removeClickListener = () => {
+          document.removeEventListener('click', outsideClickListener)
+      }
+    
+      document.addEventListener('click', outsideClickListener)
+    }
 
   render() {
     return (
@@ -43,7 +63,7 @@ class Admin extends React.Component<State, AdminState> {
           <button onClick={db.SignOut}> Log Out </button>
         </header>
         <div className="content">
-          <div className="mapArea">
+          <div className="mapArea" onClick={this.delesectOnClickOutside.bind(this)}>
             <Map map={this.props.map}
               tiles={this.props.tiles}
               selectedRow={this.state.selectedRow}
@@ -56,7 +76,7 @@ class Admin extends React.Component<State, AdminState> {
               <p>Turn Number: 1</p>
               <p>Waiting for GM...</p>
             </div>
-            <div className="tile-info">
+            <div id="tile-info" className="tile-info">
               <TileEditor tileName={this.state.tileName} tileInfo={this.state.selectedTile}></TileEditor>
             </div>
           </div>
@@ -67,3 +87,4 @@ class Admin extends React.Component<State, AdminState> {
 }
 
 export default Admin;
+  
