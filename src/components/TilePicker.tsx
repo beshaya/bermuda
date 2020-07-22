@@ -40,9 +40,14 @@ export function TilePicker(props: {
   }
 
   return (
-    <form onSubmit={onSubmit}>
-      <label> Tile:
-        <input name="tileName" type="text" list="tiles" defaultValue={props.tileName} ref={register} />
+    <form className="tile-select-form" onSubmit={onSubmit}>
+      <label>Tile:
+        <input
+          name="tileName"
+          type="text"
+          list="tiles"
+          defaultValue={props.tileName}
+          ref={register} />
         <datalist id="tiles">{tiles}</datalist>
       </label>
     </form>

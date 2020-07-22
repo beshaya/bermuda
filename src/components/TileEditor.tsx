@@ -1,6 +1,5 @@
 import React from 'react';
 import * as db from "../firebase";
-import { TilePicker } from './TilePicker';
 import { useForm } from "react-hook-form";
 
 export function TileEditor(props: {
@@ -10,7 +9,6 @@ export function TileEditor(props: {
   tiles: db.TileDict,
   selectedRow?: number,
   selectedCol?: number,
-  gameId: string
 }) {
   const { register, handleSubmit } = useForm<db.TileInfo>();
   const onSubmit = handleSubmit(async (tileInfo: db.TileInfo) => {
@@ -19,15 +17,7 @@ export function TileEditor(props: {
 
   return (
     <div>
-      <TilePicker
-        tileName={props.tileName}
-        tileInfo={props.tileInfo}
-        map={props.map}
-        tiles={props.tiles}
-        selectedRow={props.selectedRow}
-        selectedCol={props.selectedCol}
-        gameId={props.gameId} />
-      <form onSubmit={onSubmit}>
+      <form className="tile-edit-form" onSubmit={onSubmit}>
         <label>Color
           <input
             name="bg_color"
@@ -57,6 +47,7 @@ export function TileEditor(props: {
             ref={register}
           />
         </label>
+        <br />
         <label>Link
           <input
             name="link"
@@ -65,7 +56,6 @@ export function TileEditor(props: {
             defaultValue={props.tileInfo.link}
             ref={register} />
         </label>
-        <br />
         <br />
         <label>Description Text
           <textarea

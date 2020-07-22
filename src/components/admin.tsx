@@ -3,8 +3,9 @@ import * as db from '../firebase';
 import '../App.css';
 import { State } from '../providers/GameState';
 import { Map } from './Map';
-import { TileEditor } from './TileEditor';
 import { Resizer } from './Resizer';
+import { TilePicker } from './TilePicker';
+import { TileEditor } from './TileEditor';
 
 interface AdminState {
   selectedRow: number | undefined;
@@ -64,7 +65,9 @@ class Admin extends React.Component<State, AdminState> {
               selectedRow={this.state.selectedRow}
               selectedCol={this.state.selectedCol}
               onClick={this.onTileClicked.bind(this)} />
-            <Resizer map={this.props.map} gameId={this.props.user.game_id} />
+            <Resizer
+              map={this.props.map}
+              gameId={this.props.user.game_id} />
           </div>
           <div className="sidebar">
             <div className="turn-info">
@@ -72,13 +75,20 @@ class Admin extends React.Component<State, AdminState> {
               <p>Waiting for GM...</p>
             </div>
             <div className="tile-info">
-              <TileEditor tileName={this.state.tileName}
-              tileInfo={this.state.selectedTile}
+              <TilePicker
+                tileName={this.state.tileName}
+                tileInfo={this.state.selectedTile}
                 map={this.props.map}
                 tiles={this.props.tiles}
                 selectedRow={this.state.selectedRow}
                 selectedCol={this.state.selectedCol}
                 gameId={this.props.user.game_id} />
+              <TileEditor tileName={this.state.tileName}
+                tileInfo={this.state.selectedTile}
+                map={this.props.map}
+                tiles={this.props.tiles}
+                selectedRow={this.state.selectedRow}
+                selectedCol={this.state.selectedCol} />
             </div>
           </div>
         </div>
