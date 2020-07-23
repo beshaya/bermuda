@@ -57,6 +57,7 @@ class Admin extends React.Component<AdminProps, AdminState> {
    */
   componentDidUpdate(prevProps: AdminProps) {
     if (this.props.gameId !== prevProps.gameId) {
+      this.deselectTile()
       this.unsubscribeMap();
       this.subscribeMap();
     }
@@ -64,20 +65,20 @@ class Admin extends React.Component<AdminProps, AdminState> {
 
   onTileClicked(row: number, col: number) {
     if (this.state.selectedCol === col && this.state.selectedRow === row) {
-      this.setState({
-        selectedRow: undefined,
-        selectedCol: undefined,
-      });
+      this.deselectTile();
       return;
     }
+    this.selectTile(row, col)
+  }
 
+  selectTile(row: number | undefined, col: number | undefined) {
     this.setState({
       selectedRow: row,
       selectedCol: col,
     });
   }
 
-  delesectOnClickOutside(event: any) {
+  deselectTile() {
     this.setState({
       selectedRow: undefined,
       selectedCol: undefined,
@@ -123,7 +124,7 @@ class Admin extends React.Component<AdminProps, AdminState> {
         </div>
         <div className="content">
           {this.state.map.length > 0 ? (
-            <div className="mapArea" onClick={this.delesectOnClickOutside.bind(this)}>
+            <div className="mapArea" onClick={this.deselectTile.bind(this)}>
               <Map map={this.state.map}
                 tiles={this.props.tiles}
                 selectedRow={this.state.selectedRow}
