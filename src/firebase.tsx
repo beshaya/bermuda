@@ -90,14 +90,15 @@ export function SubscribeToMap(game_id: string, onNewMap: (map: MapRepr) => void
   });
 }
 
-export async function SaveGridForGame(game_id: string, newMap: Array<string>, rows: number, cols: number) {
+export async function SaveGridForGame(game_id: string, newMap: MapRepr) {
   const querySnapshot = await firestore.collection('maps').where('game_id', '==', game_id).get();
   const map_id = querySnapshot.docs[0].id;
   const doc = firestore.collection('maps').doc(map_id);
+  const flatMap = newMap.flat();
   await doc.update({
-    rows: rows,
-    cols: cols,
-    grid: newMap,
+    rows: newMap.length,
+    cols: newMap[0].length,
+    grid: flatMap,
   });
 }
 
@@ -123,6 +124,11 @@ export function SubscribeToTiles(onNewTiles: (newTiles: TileDict) => void ): Voi
     }
     onNewTiles(result);
   });
+}
+
+// Adds tile with specified properties
+export async function AddTile(tileName: string, tileInfo: TileInfo) {
+  await firestore.collection("tiles").doc(tileName).set(tileInfo);
 }
 
 // Updates tile properties

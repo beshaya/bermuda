@@ -54,18 +54,19 @@ export class Resizer extends React.Component<ResizerProps, ResizerState> {
 
     // Creates a new 1D representation of the resized map, filling in new tiles with ocean.
     // Building the map in 1D here is easer than building it in 2d, just to have it be flattened in the db.
-    const newMap: Array<string> = [];
+    const newMap: MapRepr = [];
     for (var r = 0; r < rows; ++r) {
+      newMap.push([]);
       for (var c = 0; c < cols; ++c) {
         if (r < this.props.map.length && c < this.props.map[r].length) {
-          newMap.push(this.props.map[r][c]);
+          newMap[r].push(this.props.map[r][c]);
         } else {
-          newMap.push('ocean');
+          newMap[r].push('ocean');
         }
       }
     }
 
-    SaveGridForGame(this.props.gameId, newMap, rows, cols);
+    SaveGridForGame(this.props.gameId, newMap);
   }
 
   render() {

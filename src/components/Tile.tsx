@@ -3,6 +3,15 @@ import { TileInfo } from '../firebase';
 
 export function Tile(props: {tileInfo: TileInfo, selected: boolean, onClick: () => void}) {
   const borderColor = props.selected ? "yellow" : "transparent";
+  const style: {[props: string]: string} = {
+    backgroundColor: props.tileInfo.bg_color,
+    borderStyle: "solid",
+    borderColor: borderColor,
+  };
+  if (props.tileInfo.bg_image) {
+    style['backgroundImage'] = `url(https://raw.githubusercontent.com/beshaya/bermuda/master/src/assets/tiles/${props.tileInfo.bg_image})`;
+  }
+
 
   return (
     <td
@@ -11,12 +20,7 @@ export function Tile(props: {tileInfo: TileInfo, selected: boolean, onClick: () 
         event.stopPropagation();
         props.onClick();
       }}
-      style={{
-        backgroundColor: props.tileInfo.bg_color,
-        backgroundImage: `url(https://raw.githubusercontent.com/beshaya/bermuda/master/src/assets/tiles/${props.tileInfo.bg_image})`,
-        borderStyle: "solid",
-        borderColor: borderColor,
-      }}>
+      style={style}>
       <div className="hover"> {props.tileInfo.hover_text} </div>
     </td>
   );
