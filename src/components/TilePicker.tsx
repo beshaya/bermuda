@@ -36,15 +36,10 @@ export function TilePicker(props: {
   };
 
   function changeTile(tileName: string) {
-    if (!tileList.includes(tileName)) {
-      createTile(tileName);
-    } else {
-      const row = props.selectedRow;
-      const col = props.selectedCol;
-      props.map[row][col] = tileName;
-      const map = props.map.flat();
-      db.UpdateGridForGame(props.gameId, map);
-    }
+    // Make a copy of the map so we don't modify props.
+    const newMap = props.map.map((value: Array<string>) => [...value]);
+    newMap[props.selectedRow][props.selectedCol] = tileName;
+    db.SaveGridForGame(props.gameId, newMap);
   }
 
   function createTile(tileName: string) {
