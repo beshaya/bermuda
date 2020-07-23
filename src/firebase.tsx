@@ -136,11 +136,7 @@ export function SubscribeToTiles(onNewTiles: (newTiles: TileDict) => void ): Voi
 
 // Adds tile with specified properties
 export async function AddTile(tileName: string, tileInfo: TileInfo) {
-  try {
-    await firestore.collection("tiles").doc(tileName).set(tileInfo);
-  } catch {
-    console.error("Update failed");
-  }
+  await firestore.collection("tiles").doc(tileName).set(tileInfo);
 }
 
 // Updates tile properties
