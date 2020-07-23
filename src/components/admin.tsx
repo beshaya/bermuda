@@ -7,6 +7,7 @@ import { Map } from './Map';
 import { Resizer } from './Resizer';
 import { TilePicker } from './TilePicker';
 import { TileEditor } from './TileEditor';
+import GamePicker from './GamePicker';
 
 interface AdminProps {
   tiles: db.TileDict;
@@ -34,6 +35,14 @@ class Admin extends React.Component<AdminProps, AdminState> {
   }
 
   componentDidMount() {
+    this.subscribeMap();
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeMap();
+  }
+
+  subscribeMap() {
     this.unsubscribeMap = db.SubscribeToMap(this.props.gameId, (map: db.MapRepr, error?: Error) => {
       if (error) {
         this.setState({error});
@@ -43,8 +52,14 @@ class Admin extends React.Component<AdminProps, AdminState> {
     });
   }
 
-  componentWillUnmount() {
-    this.unsubscribeMap();
+  /**
+   * Subscribe to the new map if the game changes.
+   */
+  componentDidUpdate(prevProps: AdminProps) {
+    if (this.props.gameId !== prevProps.gameId) {
+      this.unsubscribeMap();
+      this.subscribeMap();
+    }
   }
 
   onTileClicked(row: number, col: number) {
@@ -103,6 +118,9 @@ class Admin extends React.Component<AdminProps, AdminState> {
           <div className="user-info">Bermunda GM - Logged In as: {this.props.user.email}</div>
           <button onClick={db.SignOut}> Log Out </button>
         </header>
+        <div className="header">
+          <GamePicker gameId={this.props.gameId}></GamePicker>
+        </div>
         <div className="content">
           {this.state.map.length > 0 ? (
             <div className="mapArea" onClick={this.delesectOnClickOutside.bind(this)}>

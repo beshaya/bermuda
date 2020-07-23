@@ -154,3 +154,8 @@ export async function UpdateTile(tileName: string, tileInfo: TileInfo) {
     console.error("Update failed");
   }
 }
+
+export async function GetGamesList(): Promise<Array<string>> {
+  const games = await firestore.collection('games').get();
+  return games.docs.map((doc) => doc.id);
+}
