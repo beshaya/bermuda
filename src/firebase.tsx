@@ -82,11 +82,12 @@ export type MapRepr = Array<Array<string>>
 
 // Returns a 2d Array representing the entire map. Each element in the array is a string which can be looked up in
 // the Tiles dictionary.
-export function SubscribeToMap(game_id: string, onNewMap: (map: MapRepr) => void): VoidFunction {
+export function SubscribeToMap(game_id: string, onNewMap: (map: MapRepr, error?: Error) => void): VoidFunction {
   return firestore.collection('maps').where('game_id', '==', game_id).onSnapshot((querySnapshot) => {
     if (querySnapshot.empty) {
       console.warn('No map found for game ' + game_id);
-      onNewMap([]);
+      onNewMap([], Error('No map found for game ' + game_id));
+      return;
     }
     const map = querySnapshot.docs[0].data();
     const flat_grid = map['grid'] as Array<string>;
@@ -95,6 +96,7 @@ export function SubscribeToMap(game_id: string, onNewMap: (map: MapRepr) => void
     if (rows * cols !== flat_grid.length) {
       console.error('DB error: Grid size does not match specified dimensions');
       onNewMap([]);
+      return;
     }
     const folded_grid = [];
     while(flat_grid.length) folded_grid.push(flat_grid.splice(0,cols));

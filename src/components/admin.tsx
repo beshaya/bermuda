@@ -1,7 +1,8 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import * as db from '../firebase';
 import '../App.css';
-import { DbUser } from '../providers/UserData'
+import { DbUser } from '../providers/UserData';
 import { Map } from './Map';
 import { Resizer } from './Resizer';
 import { TilePicker } from './TilePicker';
@@ -16,6 +17,7 @@ interface AdminState {
   selectedRow: number | undefined;
   selectedCol: number | undefined;
   map: db.MapRepr;
+  error: Error | undefined;
 }
 
 class Admin extends React.Component<AdminProps, AdminState> {
@@ -26,13 +28,18 @@ class Admin extends React.Component<AdminProps, AdminState> {
     this.state = {
       selectedRow: undefined,
       selectedCol: undefined,
-      map: []
+      map: [],
+      error: undefined,
     };
   }
 
   componentDidMount() {
-    this.unsubscribeMap = db.SubscribeToMap(this.props.gameId, (map: db.MapRepr) => {
-      this.setState({ map: map });
+    this.unsubscribeMap = db.SubscribeToMap(this.props.gameId, (map: db.MapRepr, error?: Error) => {
+      if (error) {
+        this.setState({error});
+        return;
+      }
+      this.setState({ map });
     });
   }
 
@@ -63,6 +70,9 @@ class Admin extends React.Component<AdminProps, AdminState> {
   }
 
   renderTileEditor() {
+    if (this.state.error) {
+      return (<Redirect to='/'></Redirect>);
+    }
     if (this.state.selectedRow === undefined || this.state.selectedCol === undefined) {
       return (<div />);
     }
@@ -96,14 +106,14 @@ class Admin extends React.Component<AdminProps, AdminState> {
         <div className="content">
           {this.state.map.length > 0 ? (
             <div className="mapArea" onClick={this.delesectOnClickOutside.bind(this)}>
-                <Map map={this.state.map}
-                  tiles={this.props.tiles}
-                  selectedRow={this.state.selectedRow}
-                  selectedCol={this.state.selectedCol}
-                  onClick={this.onTileClicked.bind(this)} />
-                <Resizer map={this.state.map} gameId={this.props.gameId} />
-              </div>
-            ) : (
+              <Map map={this.state.map}
+                tiles={this.props.tiles}
+                selectedRow={this.state.selectedRow}
+                selectedCol={this.state.selectedCol}
+                onClick={this.onTileClicked.bind(this)} />
+              <Resizer map={this.state.map} gameId={this.props.gameId} />
+            </div>
+          ) : (
             <div />
           )}
           <div className="sidebar">
