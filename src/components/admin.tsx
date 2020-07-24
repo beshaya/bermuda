@@ -57,7 +57,7 @@ class Admin extends React.Component<AdminProps, AdminState> {
    */
   componentDidUpdate(prevProps: AdminProps) {
     if (this.props.gameId !== prevProps.gameId) {
-      this.deselectTile()
+      this.deselectTile();
       this.unsubscribeMap();
       this.subscribeMap();
     }
@@ -68,7 +68,7 @@ class Admin extends React.Component<AdminProps, AdminState> {
       this.deselectTile();
       return;
     }
-    this.selectTile(row, col)
+    this.selectTile(row, col);
   }
 
   selectTile(row: number | undefined, col: number | undefined) {

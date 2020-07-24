@@ -23,6 +23,16 @@ export class Resizer extends React.Component<ResizerProps, ResizerState> {
     };
   }
 
+  componentDidUpdate(prevProps: ResizerProps) {
+    if (this.props.map.length === prevProps.map.length && this.props.map[0].length === prevProps.map[0].length) {
+      return;
+    }
+    this.setState({
+      rows: this.props.map.length.toString(),
+      cols: this.props.map[0].length.toString(),
+    });
+  }
+
   rowsChanged(event: React.ChangeEvent<HTMLInputElement>) {
     this.setState({rows: event.target.value});
   }
