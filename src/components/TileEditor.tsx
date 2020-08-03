@@ -9,6 +9,8 @@ export function TileEditor(props: {
 }) {
   const { register, handleSubmit } = useForm<db.TileInfo>();
   const onSubmit = handleSubmit(async (tileInfo: db.TileInfo) => {
+    // Checkboxes that become checked have the value ['on']. Weird.
+    tileInfo.classified = tileInfo.classified === true || tileInfo.classified as unknown === ['on'];
     db.UpdateTile(props.tileName, tileInfo);
   });
 
@@ -51,6 +53,15 @@ export function TileEditor(props: {
             type="text"
             key={`link:${props.tileInfo.link}`}
             defaultValue={props.tileInfo.link}
+            ref={register} />
+        </label>
+        <br />
+        <label>Classified
+          <input
+            name="classified"
+            type="checkbox"
+            key={`classified:${props.tileInfo.classified}`}
+            defaultChecked={!!props.tileInfo.classified}
             ref={register} />
         </label>
         <br />
