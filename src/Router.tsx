@@ -8,72 +8,65 @@ import {
 import App from './App';
 import Login from './components/login';
 import Admin from './components/admin';
-import { State } from './providers/GameState';
-import { UserData } from './providers/UserData';
+import { DbUser } from './providers/UserData';
 import * as db from "./firebase";
 
 export interface RouterState {
-  user: null | UserData;
-  map: db.MapRepr;
+  userAuth: null | firebase.User;
+  db_user: null | DbUser;
   tiles: db.TileDict;
 }
 
 export class Router extends React.Component<{}, RouterState> {
-  unsubscribeMap = ()=>{};
   unsubscribeTiles = ()=>{};
 
   constructor(props: {}) {
     super(props);
-    this.state = {user: null, map: [], tiles: {}};
+    this.state = {userAuth: null, db_user: null, tiles: {}};
   }
 
   componentDidMount = () => {
     db.auth.onAuthStateChanged(async (userAuth) => {
       if (!userAuth) {
-        this.setState({ user: null });
+        this.setState({ userAuth: null, db_user: null });
         return;
       }
-      const user = await db.GetUserData(userAuth);
-
-      this.unsubscribeMap = db.SubscribeToMap(user.game_id, (map: db.MapRepr) => {
-        this.setState({ map: map });
-      });
 
       this.unsubscribeTiles = db.SubscribeToTiles((tiles: db.TileDict) => {
         this.setState({ tiles: tiles });
       });
 
-      this.setState({ user });
+      const db_user = await db.GetDbUser(userAuth);
+
+      this.setState({ userAuth, db_user });
     });
   };
 
   componentWillUnmount() {
     this.unsubscribeTiles();
-    this.unsubscribeMap();
   }
 
   redirectOnLogin() {
-    if (this.state.user && this.state.user.db_user.admin) {
-      return (<Redirect to='/admin' />);
+    if (this.state.db_user && this.state.db_user.admin) {
+      return (<Redirect to={'/admin/' + this.state.db_user.last_game} />);
     } else {
       return (<Redirect to='/game' />);
     }
   }
+
   render() {
-    if (!this.state.user) {
+    if (!this.state.userAuth || !this.state.db_user) {
       return (<Login></Login>);
     }
-    if (this.state.map.length === 0 || Object.keys(this.state.tiles).length === 0) {
+    if (Object.keys(this.state.tiles).length === 0) {
       // Don't try to render the map until we load it!
       return (<div>Loading...</div>);
     }
-    // Reassign from RouterState to State to convert user from <User | null> to <User>
-    const resolvedState: State = {user: this.state.user, map: this.state.map, tiles: this.state.tiles};
     return (
       <BrowserRouter>
         <Switch>
-          <AdminRoute user={this.state.user} path='/admin'><Admin {...resolvedState} /></AdminRoute>
-          <Route path='/game'><App {...resolvedState} /></Route>
+          <AdminRoute db_user={this.state.db_user} path='/admin/:game_id' tiles={this.state.tiles}></AdminRoute>
+          <Route path='/game'><App user={this.state.db_user} tiles={this.state.tiles} /></Route>
           <Route path='/'>{this.redirectOnLogin()}</Route>
         </Switch>
       </BrowserRouter>
@@ -82,22 +75,23 @@ export class Router extends React.Component<{}, RouterState> {
 }
 
 type AuthRouteProps = {
-  user: UserData;
+  db_user: DbUser;
   path: string;
+  tiles: db.TileDict
 }
 
-const AdminRoute: FunctionComponent<AuthRouteProps> = ({children, user, path}) => {
+const AdminRoute: FunctionComponent<AuthRouteProps> = ({db_user, path, tiles}) => {
   return (
     <Route
       path={path}
-      render={({ location }) =>
-        user.db_user.admin ? (
-          children
+      render={(props) =>
+        db_user.admin ? (
+          <Admin user={db_user} tiles={tiles} gameId={props.match.params.game_id}></Admin>
         ) : (
           <Redirect
             to={{
               pathname: '/game',
-              state: { from: location }
+              state: { from: props.location }
             }}
           />
         )

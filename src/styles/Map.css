@@ -4,20 +4,15 @@
 }
 
 .tile {
-  width: 200px;
-  height: 200px;
+  width: 197px;
+  height: 197px;
   padding: 0px;
-  background-size: 200px 200px;
+  background-size: 197px 197px;
   text-align: center;
 }
 
 .tile:hover {
   opacity: 90%;
-}
-
-.selected {
-  width: 200px;
-  height: 200px;
 }
 
 .hover {
