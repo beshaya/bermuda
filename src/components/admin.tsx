@@ -103,7 +103,8 @@ class Admin extends React.Component<AdminProps, AdminState> {
           tiles={this.props.tiles}
           selectedRow={this.state.selectedRow}
           selectedCol={this.state.selectedCol}
-          gameId={this.props.gameId} />
+          gameId={this.props.gameId}
+          showClassified={this.props.user.gm} />
         <TileEditor tileName={tileName}
           tileInfo={tileInfo}
           tiles={this.props.tiles} />
