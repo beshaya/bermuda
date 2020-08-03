@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { GetGamesList } from '../firebase';
+import { GetGamesList, SetGameForAdmin } from '../firebase';
 
 export class GamePicker extends React.Component<{gameId: string}, {gamesList: Array<string>, redirect?: string}> {
   constructor(props: {gameId: string}) {
@@ -17,6 +17,7 @@ export class GamePicker extends React.Component<{gameId: string}, {gamesList: Ar
 
   onGameChanged(event: React.ChangeEvent<HTMLSelectElement>) {
     const gameName = event.target.value;
+    SetGameForAdmin(gameName);
     this.setState({redirect: gameName});
   }
 

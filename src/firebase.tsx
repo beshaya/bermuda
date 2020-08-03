@@ -159,3 +159,12 @@ export async function GetGamesList(): Promise<Array<string>> {
   const games = await firestore.collection('games').get();
   return games.docs.map((doc) => doc.id);
 }
+
+export async function SetGameForAdmin(game: string) {
+  if (!auth.currentUser || !auth.currentUser.email) {
+    console.warn('Attempted to update user without a user logged in?!');
+    return;
+  }
+  await firestore.collection('users').doc(auth.currentUser.email)
+    .update({last_game: game});
+}
