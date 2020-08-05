@@ -45,6 +45,7 @@ export async function GetDbUser(user: firebase.User): Promise<DbUser> {
     if (userDocData) {
       db_user.admin = (userDocData['admin'] === true);
       db_user.last_game = userDocData['last_game'] as string;
+      db_user.gm = !!userDocData['gm'];
     }
 
     if (db_user.admin && ! db_user.last_game) {
@@ -123,6 +124,7 @@ export interface TileInfo {
   description_text: string;
   hover_text: string;
   link: string;
+  classified: boolean;
 }
 
 // Dictionary for looking up tiles by name.

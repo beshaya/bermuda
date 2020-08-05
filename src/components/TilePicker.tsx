@@ -8,10 +8,15 @@ export function TilePicker(props: {
   tiles: db.TileDict,
   selectedRow: number,
   selectedCol: number,
-  gameId: string
+  gameId: string,
+  showClassified: boolean
 }) {
   const tileList = [...Object.keys(props.tiles)];
-  const tiles = tileList.map( (tileName) =>
+  var reducedList = tileList;
+  if (!props.showClassified) {
+    reducedList = tileList.filter((tileName: string) => !props.tiles[tileName].classified);
+  }
+  const tiles = reducedList.map( (tileName) =>
     <option value={tileName} key={tileName}>{tileName}</option>
   );
   tiles.push(<option value='Create New Tile' key='Create'>Create New Tile</option>);
