@@ -28,3 +28,6 @@ bermuda.code-workspace
 # Emacs
 *~
 \#*
+
+# Firebase
+.firebase/*
