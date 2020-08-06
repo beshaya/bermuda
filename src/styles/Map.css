@@ -12,15 +12,15 @@
 }
 
 .tile:hover {
-  opacity: 90%;
+  opacity: 0.9;
 }
 
-.hover {
+.hoverText {
   visibility: hidden;
   background-color: white;
-  opacity: 100%;
+  opacity: 1.0;
 }
 
-.tile:hover .hover {
+.tile:hover .hoverText {
   visibility: visible;
 }
