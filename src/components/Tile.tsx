@@ -21,7 +21,7 @@ export function Tile(props: {tileInfo: TileInfo, selected: boolean, onClick: () 
         props.onClick();
       }}
       style={style}>
-      <div className="hover"> {props.tileInfo.hover_text} </div>
+      <div className="hoverText"> {props.tileInfo.hover_text} </div>
     </td>
   );
 }
