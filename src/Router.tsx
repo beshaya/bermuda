@@ -10,6 +10,7 @@ import Login from './components/login';
 import Admin from './components/admin';
 import { DbUser } from './providers/UserData';
 import * as db from "./firebase";
+import firebase from 'firebase/app';
 
 export interface RouterState {
   userAuth: null | firebase.User;
